@@ -24,6 +24,8 @@ function App() {
   const [toggle, setToggle] = useState(false);
   const [formToggle, setFormToggle] = useState(false);  // To toggle the property form
 
+  
+
   const loadBlockchainData = async () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     setProvider(provider);
@@ -50,6 +52,7 @@ function App() {
     window.ethereum.on('accountsChanged', async () => {
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
       const account = ethers.utils.getAddress(accounts[0]);
+      
       setAccount(account);
     });
   };
@@ -70,41 +73,45 @@ function App() {
   // Handle the listing of a new property
   const handleListingSubmit = async (ipfsUrl, price) => {
     try {
-      const signer = provider.getSigner();
+        const signer = provider.getSigner();  // Get the current MetaMask account used for signing
 
-      // Mint the new NFT
-      const mintTransaction = await realEstate.connect(signer).mint(ipfsUrl);
-      await mintTransaction.wait();
+        const buyerAddress = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266";  // Replace with the actual buyer's address from deploy.js
+        console.log('Hardcoded Buyer Address:', buyerAddress);
 
-      // Get the latest token ID
-      const totalSupply = await realEstate.totalSupply();
-      const newItemId = totalSupply.toNumber();
+        // Mint the new NFT using the signer (the current MetaMask account)
+        const mintTransaction = await realEstate.connect(signer).mint(ipfsUrl);
+        await mintTransaction.wait();
 
-      // Approve the Escrow contract to handle the token
-      const approveTransaction = await realEstate.connect(signer).approve(escrow.address, newItemId);
-      await approveTransaction.wait();
+        // Get the latest token ID (representing the newly minted property)
+        const totalSupply = await realEstate.totalSupply();
+        const newItemId = totalSupply.toNumber();
 
-      // Calculate 50% escrow amount from the price
-      const escrowAmount = ethers.utils.parseUnits((price / 2).toString(), 'ether');
+        // Approve the Escrow contract to handle the transfer of the NFT
+        const approveTransaction = await realEstate.connect(signer).approve(escrow.address, newItemId);
+        await approveTransaction.wait();
 
-      // List the property in the Escrow contract
-      const listTransaction = await escrow.connect(signer).list(
-        newItemId,
-        account,  // Seller's account
-        ethers.utils.parseUnits(price, 'ether'),  // Price in ETH
-        escrowAmount  // 50% of the price as escrow amount
-      );
-      await listTransaction.wait();
+        // Calculate 50% escrow amount based on the price entered by the seller
+        const escrowAmount = ethers.utils.parseUnits((price / 2).toString(), 'ether');
 
-      // Fetch the new property metadata and update homes state
-      const metadata = await fetch(ipfsUrl).then((res) => res.json());
-      setHomes([...homes, metadata]);  // Dynamically add the new home to the list
+        // List the property in the Escrow contract, hardcoding the buyer's address as the first MetaMask account
+        const listTransaction = await escrow.connect(signer).list(
+            newItemId,
+            buyerAddress,  // Use the first MetaMask account as the buyer's address (hardcoded)
+            ethers.utils.parseUnits(price, 'ether'),  // Price entered by the seller
+            escrowAmount  // 50% of the price as escrow amount
+        );
+        await listTransaction.wait();
 
-      setFormToggle(false);  // Close the form after submission
+        // Fetch the newly minted property metadata from the IPFS URL
+        const metadata = await fetch(ipfsUrl).then((res) => res.json());
+        setHomes([...homes, metadata]);  // Dynamically add the new property to the list of homes
+
+        setFormToggle(false);  // Close the property listing form
     } catch (error) {
-      console.error('Error minting and listing property:', error);
+        console.error('Error minting and listing property:', error);
     }
-  };
+};
+
 
   return (
     <div>
