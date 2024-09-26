@@ -1,11 +1,33 @@
 import '/home/ian/millow/src/PropertyForm.css';
-
 import { useState } from 'react';
 
 const PropertyForm = ({ onSubmit, onClose }) => {
   const [ipfsUrl, setIpfsUrl] = useState('');
   const [price, setPrice] = useState('');
   const [aiPredictedPrice] = useState('Coming Soon');  // Placeholder for AI predicted price
+  const [metadata, setMetadata] = useState(null); // State to hold fetched metadata
+  const [metadataFetched, setMetadataFetched] = useState(false);  // Track if metadata is fetched
+
+  // Function to handle metadata fetching
+  const fetchMetadata = async () => {
+    if (ipfsUrl) {
+      try {
+        const response = await fetch(ipfsUrl);
+        if (response.ok) {
+          const data = await response.json();
+          setMetadata(data); // Update state with fetched data
+          setMetadataFetched(true);  // Mark metadata as fetched
+        } else {
+          alert('Failed to fetch metadata from IPFS');
+        }
+      } catch (error) {
+        console.error('Error fetching IPFS metadata:', error);
+        alert('Error fetching metadata. Please check the IPFS URL.');
+      }
+    } else {
+      alert('Please enter an IPFS URL.');
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -29,7 +51,40 @@ const PropertyForm = ({ onSubmit, onClose }) => {
               onChange={(e) => setIpfsUrl(e.target.value)}
               placeholder="Enter IPFS URL for property metadata"
             />
+            <button type="button" onClick={fetchMetadata}>Fetch Metadata</button>  {/* Button to fetch metadata */}
           </div>
+
+          {/* Show fetched metadata if available */}
+          <br />
+          {metadataFetched && metadata && (
+            <>
+              <div>
+                <label>Property Name:</label>
+                <input
+                  type="text"
+                  value={metadata.name || ''}
+                  readOnly
+                />
+              </div>
+              <div>
+                <label>Description:</label>
+                <input
+                  type="text"
+                  value={metadata.description || ''}
+                  readOnly
+                />
+              </div>
+              <div>
+                <label>Attributes:</label>
+                {metadata.attributes && metadata.attributes.map((attr, index) => (
+                  <div key={index}>
+                    <strong>{attr.trait_type}:</strong> {attr.value}
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+          <br />
           <div>
             <label>Price (ETH):</label>
             <input
@@ -47,7 +102,11 @@ const PropertyForm = ({ onSubmit, onClose }) => {
               disabled  // AI Price is currently a placeholder
             />
           </div>
-          <button type="submit">Mint & List Property</button>
+
+          {/* Only show Mint & List button if metadata is fetched */}
+          {metadataFetched && (
+            <button type="submit">Mint & List Property</button>
+          )}
         </form>
         <button type="button" onClick={onClose}>Close</button>  {/* Close button */}
       </div>
