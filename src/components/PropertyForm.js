@@ -1,22 +1,88 @@
 import '/home/ian/millow/src/PropertyForm.css';
+import '/home/ian/millow/src/oracleService.js';
+import { getPriceFromOracle } from '../oracleService';
 import { useState } from 'react';
 
 const PropertyForm = ({ onSubmit, onClose }) => {
   const [ipfsUrl, setIpfsUrl] = useState('');
   const [price, setPrice] = useState('');
-  const [aiPredictedPrice] = useState('Coming Soon');  // Placeholder for AI predicted price
+  const [aiPredictedPrice, setAIPrice] = useState('');  // Placeholder for AI predicted price
   const [metadata, setMetadata] = useState(null); // State to hold fetched metadata
   const [metadataFetched, setMetadataFetched] = useState(false);  // Track if metadata is fetched
+
+   // State variables for the metadata fields
+   const [propertyName, setPropertyName] = useState('');
+   const [address, setAddress] = useState('');
+   const [description, setDescription] = useState('');
+   const [imageUrl, setImageUrl] = useState('');
+   const [purchasePrice, setPurchasePrice] = useState('');
+   const [residenceType, setResidenceType] = useState('');
+   const [bedrooms, setBedrooms] = useState('');
+   const [bathrooms, setBathrooms] = useState('');
+   const [squareFeet, setSquareFeet] = useState('');
+   const [yearBuilt, setYearBuilt] = useState('');
+
 
   // Function to handle metadata fetching
   const fetchMetadata = async () => {
     if (ipfsUrl) {
-      try {
+      try 
+      {
         const response = await fetch(ipfsUrl);
-        if (response.ok) {
+        if (response.ok) 
+        {
+
           const data = await response.json();
           setMetadata(data); // Update state with fetched data
           setMetadataFetched(true);  // Mark metadata as fetched
+
+          // Store each attribute in its own variable
+          setPropertyName(data.name || '');
+          setAddress(data.address || '');
+          setDescription(data.description || '');
+          setImageUrl(data.image || '');
+
+          // Assuming the attributes are in an array called 'attributes'
+          data.attributes.forEach(attr => {
+            switch(attr.trait_type) {
+              case 'Purchase Price':
+                setPurchasePrice(attr.value);
+                break;
+              case 'Type of Residence':
+                setResidenceType(attr.value);
+                break;
+              case 'Bed Rooms':
+                setBedrooms(attr.value);
+                break;
+              case 'Bathrooms':
+                setBathrooms(attr.value);
+                break;
+              case 'Square Feet':
+                setSquareFeet(attr.value);
+                break;
+              case 'Year Built':
+                setYearBuilt(attr.value);
+                break;
+              default:
+                break;
+            }
+          });
+
+          const propertyData = {
+            year: yearBuilt,
+            resType: residenceType,
+            beds: bedrooms,
+            baths: bathrooms,
+            sqfeet: squareFeet,
+          };
+      
+          try {
+            const aiPrice = await getPriceFromOracle(propertyData);
+            setAIPrice(aiPrice);
+          } catch (error) {
+            alert(error.message);
+          }
+
         } else {
           alert('Failed to fetch metadata from IPFS');
         }
