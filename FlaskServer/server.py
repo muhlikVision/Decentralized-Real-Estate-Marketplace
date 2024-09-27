@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 CORS(app)
 
-#model = joblib.load('propertyModel.joblib')
+model = joblib.load('propertyModel.joblib')
 
 @app.route('/predict_price', methods=['POST'])
 def predict_price():
@@ -20,10 +20,10 @@ def predict_price():
         year = str(property_data.get('year'))
 
         input_data = [[typeofRes,rooms,bath,sqft,year]]
-        #price = model.predict(input_data)
+        price = model.predict(input_data)
 
         #return jsonify({'predicted_price': price}), 200
-        return jsonify({'predicted_price': '23'}), 200
+        #return jsonify({'predicted_price': '23'}), 200
 
     except Exception as e:
         print(str(e))
