@@ -103,6 +103,17 @@ function App() {
 
       // Fetch the newly minted property metadata from the IPFS URL
       const metadata = await fetch(ipfsUrl).then((res) => res.json());
+
+      console.log(metadata)
+      
+      // Find and update the "Price" attribute in the metadata
+      metadata.attributes = metadata.attributes.map(attribute => {
+        if (attribute.trait_type === "Purchase Price") {
+          attribute.value = price;  // Update the price value
+        }
+        return attribute;
+      });
+
       setHomes([...homes, metadata]);  // Dynamically add the new property to the list of homes
 
       setFormToggle(false);  // Close the property listing form
@@ -117,7 +128,7 @@ function App() {
       <Search />
 
       <div className='cards__section'>
-        <h3>Homes For You</h3>
+        <h3>Property NFTs for you</h3>
         <hr />
         {account === '0x70997970C51812dc3A010C7d01b50e0d17dc79C8' && (
         <button onClick={toggleForm} className='home__buy'>List New Property</button> 

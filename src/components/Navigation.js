@@ -18,7 +18,7 @@ const Navigation = ({ account, setAccount }) => {
 
             <div className='nav__brand'>
                 <img src={logo} alt="Logo" />
-                <h1>PropertyX</h1>
+                <h1>D-R-E Marketplace</h1>
             </div>
 
             {account ? (

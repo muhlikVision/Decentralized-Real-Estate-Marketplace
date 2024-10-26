@@ -46,7 +46,7 @@ const PropertyForm = ({ onSubmit, onClose }) => {
           data.attributes.forEach(attr => {
             switch(attr.trait_type) {
               case 'Purchase Price':
-                setPurchasePrice(attr.value);
+                setPurchasePrice(0);
                 break;
               case 'Type of Residence':
                 setResidenceType(attr.value);
@@ -68,21 +68,6 @@ const PropertyForm = ({ onSubmit, onClose }) => {
             }
           });
 
-          const propertyData = {
-            year: yearBuilt,
-            resType: residenceType,
-            beds: bedrooms,
-            baths: bathrooms,
-            sqfeet: squareFeet,
-          };
-      
-          try {
-            const aiPrice = await getPriceFromOracle(propertyData);
-            setAIPrice(aiPrice);
-          } catch (error) {
-            alert(error.message);
-          }
-
         } else {
           alert('Failed to fetch metadata from IPFS');
         }
@@ -94,6 +79,23 @@ const PropertyForm = ({ onSubmit, onClose }) => {
       alert('Please enter an IPFS URL.');
     }
   };
+
+  const fetchAIPrice = async () => {
+    const propertyData = {
+      year: yearBuilt,
+      resType: residenceType,
+      beds: bedrooms,
+      baths: bathrooms,
+      sqfeet: squareFeet,
+    };
+
+    try {
+      const aiPrice = await getPriceFromOracle(propertyData);
+      setAIPrice(aiPrice);
+    } catch (error) {
+      alert(error.message);
+    }
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -165,8 +167,14 @@ const PropertyForm = ({ onSubmit, onClose }) => {
             <input
               type="text"
               value={aiPredictedPrice}
+              onChange={(e) => setAIPrice(e.target.value)}
               disabled  // AI Price is currently a placeholder
             />
+            
+            <button type="button" onClick={fetchAIPrice}>Predict Price</button>  {/* Button to fetch metadata */}
+            </div>
+            <br></br>
+            <div>
           </div>
 
           {/* Only show Mint & List button if metadata is fetched */}
