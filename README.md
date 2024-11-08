@@ -51,6 +51,8 @@ This project aims to bring transparency, security, and efficiency to real estate
 4. **Storage**: IPFS stores property metadata, ensuring decentralized access to property information.
 5. **Oracle Integration**: Oracles enable the platform to fetch and validate external data, supporting dynamic, real-time interactions between off-chain data and the blockchain.
 
+![arch](https://github.com/user-attachments/assets/908f32b3-04aa-4887-941b-fc83db911a2f)
+
 ## Getting Started
 
 ### Prerequisites
@@ -146,5 +148,7 @@ Feel free to adjust this README based on the specific features and components of
 
 
 ![Screenshot 2024-09-27 150104 - Copy](https://github.com/user-attachments/assets/57280eb1-9903-4d7a-8ec6-bb038e700824)
+![Screenshot 2024-09-27 152220](https://github.com/user-attachments/assets/cd9e387a-e2e3-4d3c-8aeb-2d267da8d05a)
 ![Screenshot 2024-09-27 160613](https://github.com/user-attachments/assets/b30fc26a-c9f9-4605-ad37-d320624273ec)
-![arch](https://github.com/user-attachments/assets/908f32b3-04aa-4887-941b-fc83db911a2f)
+
+
