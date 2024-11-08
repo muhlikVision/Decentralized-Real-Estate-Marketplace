@@ -1,7 +1,3 @@
-Here’s a detailed README file template for your decentralized real estate marketplace project. This README covers essential sections like project description, features, setup instructions, and technical details.
-
----
-
 # Decentralized Real Estate Marketplace
 
 A decentralized platform to facilitate secure, transparent real estate transactions by tokenizing properties as NFTs on the Ethereum blockchain. This project integrates AI for property price prediction and decentralized storage using IPFS, enabling an efficient, automated, and cost-effective solution for real estate transactions.
