@@ -140,8 +140,6 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ---
 
-Feel free to adjust this README based on the specific features and components of your project!
-
 
 ![Screenshot 2024-09-27 150104 - Copy](https://github.com/user-attachments/assets/57280eb1-9903-4d7a-8ec6-bb038e700824)
 ![Screenshot 2024-09-27 152220](https://github.com/user-attachments/assets/cd9e387a-e2e3-4d3c-8aeb-2d267da8d05a)
