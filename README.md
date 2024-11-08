@@ -38,10 +38,10 @@ This project aims to bring transparency, security, and efficiency to real estate
 - **Blockchain**: Ethereum
 - **Smart Contracts**: Solidity, OpenZeppelin
 - **Frontend**: React.js
-- **Backend**: Flask
+- **Backend**: Flask, Oracle
 - **Machine Learning**: Scikit-learn (RandomForestRegressor for price prediction)
 - **Decentralized Storage**: IPFS
-- **Development Tools**: Truffle, Ganache, MetaMask
+- **Development Tools**: Truffle, Ganache, Hardhat, MetaMask
 
 ## System Architecture
 
