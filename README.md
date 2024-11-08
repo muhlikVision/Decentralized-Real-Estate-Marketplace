@@ -57,7 +57,7 @@ This project aims to bring transparency, security, and efficiency to real estate
 
 - Node.js and npm
 - Python 3.8+
-- Truffle and Ganache for smart contract testing
+- Hardhat for smart contract testing
 - MetaMask browser extension for Ethereum wallet
 - IPFS node or Infura for decentralized storage
 
